@@ -31,19 +31,45 @@ struct stPeriods
 	stDate EndDate;
 };
 
-using namespace MyDateFunction;
-using namespace MyCmathFunction;
-using namespace MyInputFunction;
-using namespace MyPrintFunction;
-using namespace MyArrayFunction;
 
 
 namespace MyDateFunction
 {
-	bool isLeapYear(short Year)
+	short NumberOfDaysInAMonth(short, short);
+	bool IsLeapYear(short Year)
 	{
 		return (Year % 4 == 0 && Year % 100 != 0) || (Year % 400 == 0);
 	}
+
+	short NumberOfDaysInAMonth(short Month, short Year)
+	{
+		if (Month < 1 || Month>12)
+			return 0;
+		int days[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+		return (Month == 2) ? (IsLeapYear(Year) ? 29 : 28) :
+			days[Month - 1];
+	}
+	bool IsValidDate(short Day, short Month, short Year)
+	{
+		Day = VerifyNum(Day);
+		Month = VerifyNum(Month);
+		Year = VerifyNum(Year);
+
+		if (Month < 1 || Month > 12)
+			return false;
+
+		if (Day < 1 || Day > NumberOfDaysInAMonth(Month, Year))
+			return false;
+
+		// If valid, store into the private Date struct
+		Date._Day = Day;
+		Date._Month = Month;
+		Date._Year = Year;
+
+
+		return true;
+	}
+
 	bool IsDate1EqualDate2(stDate Date1, stDate Date2)
 	{
 		return (Date1.Year == Date2.Year) ? ((Date1.Month == Date2.Month) ? ((Date1.Day == Date2.Day) ? true : false) : false) : false;
@@ -59,8 +85,8 @@ namespace MyDateFunction
 	bool IsLastDayInMonth(stDate Date)
 	{
 		return (Date.Day == NumberOfDaysInAMonth(Date.Month, Date.Year));
-	}
-	bool IsLastMonthInYear(short Month)
+	}m
+	bool IsLmastMonthInYear(short Month)
 	{
 		return (Month == 12);
 	}
@@ -198,16 +224,6 @@ namespace MyDateFunction
 		//Period of 1000 years
 		Date.Year += 1000;
 		return Date;
-	}
-
-
-	short NumberOfDaysInAMonth(short Month, short Year)
-	{
-		if (Month < 1 || Month>12)
-			return 0;
-		int days[12] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
-		return (Month == 2) ? (isLeapYear(Year) ? 29 : 28) :
-			days[Month - 1];
 	}
 
 	int GetDifferenceInDays(stDate Date1, stDate Date2, bool IncludeEndDay = false)
@@ -364,11 +380,14 @@ namespace MyDateFunction
 	}
 
 }
+using namespace MyDateFunction;
+
 
 namespace MyCmathFunction
 {
 
 	/*______________________declaration function_______________________________________*/
+	string NumberToText(int );
 	enPositiveNegativeZero PositiveOrNegativeOrZeroInt(int);
 	bool IsZero(int);
 	bool IsPositive(int);
@@ -440,6 +459,48 @@ namespace MyCmathFunction
 	short NumberOfDaysInAMonth(short Month, short Year);
 
 	/*_________________definition function____________________*/
+	string NumberToText(int Number)
+	{
+
+		if (Number == 0)
+			return "";
+
+		if (Number >= 1 && Number <= 19)
+		{
+			string arr[] = { "","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen" };
+			return arr[Number] + " ";
+		}
+
+		if (Number >= 20 && Number <= 99)
+		{
+			string arr[] = { "","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety" };
+			return arr[Number / 10] + " " + NumberToText(Number % 10);
+		}
+
+		if (Number >= 100 && Number <= 199)
+			return "One Hundred " + NumberToText(Number % 100);
+
+		if (Number >= 200 && Number <= 999)
+			return NumberToText(Number / 100) + "Hundreds " + NumberToText(Number % 100);
+
+		if (Number >= 1000 && Number <= 1999)
+			return "One Thousand " + NumberToText(Number % 1000);
+
+		if (Number >= 2000 && Number <= 999999)
+			return NumberToText(Number / 1000) + "Thousands " + NumberToText(Number % 1000);
+
+		if (Number >= 1000000 && Number <= 1999999)
+			return "One Million " + NumberToText(Number % 1000000);
+
+		if (Number >= 2000000 && Number <= 999999999)
+			return NumberToText(Number / 1000000) + "Millions " + NumberToText(Number % 1000000);
+
+		if (Number >= 1000000000 && Number <= 1999999999)
+			return "One Billion " + NumberToText(Number % 1000000000);
+		else
+			return NumberToText(Number / 1000000000) + "Billions " + NumberToText(Number % 1000000000);
+
+	}
 	enPositiveNegativeZero PositiveOrNegativeOrZeroInt(int Number)
 	{
 		if (Number == 0)
@@ -885,6 +946,7 @@ namespace MyCmathFunction
 	}
 
 }
+using namespace MyCmathFunction;
 
 namespace MyInputFunction
 {
@@ -1360,6 +1422,7 @@ namespace MyInputFunction
 
 
 }
+using namespace MyInputFunction;
 
 namespace MyPrintFunction
 {
@@ -1590,6 +1653,7 @@ namespace MyPrintFunction
 
 
 }
+using namespace MyPrintFunction;
 
 namespace MyArrayFunction
 {
@@ -2208,3 +2272,6 @@ namespace MyArrayFunction
 
 
 }
+using namespace MyArrayFunction;
+
+
